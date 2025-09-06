@@ -1,0 +1,324 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Footprint Project</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+  margin:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height:100vh; overflow:hidden;
+  background: linear-gradient(135deg,#6c5ce7,#00cec9,#0984e3);
+  background-size: 600% 600%;
+  animation: gradientBG 15s ease infinite;
+  display:flex; justify-content:center; align-items:center;
+}
+@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.particle{position:absolute;border-radius:50%;background:rgba(255,255,255,0.2);animation:float 20s linear infinite;}
+@keyframes float{from{transform:translateY(100vh) scale(0.5);opacity:0}to{transform:translateY(-10vh) scale(1);opacity:1}}
+.container{
+  width:95%; max-width:900px; padding:40px; border-radius:20px;
+  background: rgba(255,255,255,0.15); backdrop-filter: blur(15px);
+  box-shadow:0 15px 50px rgba(0,0,0,0.3); text-align:center; color:#fff;
+  position:relative;
+}
+h1,h2,h3,p,li,label{color:#f1f2f6;}
+.slide{display:none; animation:slideIn 0.8s ease;}
+.active{display:block;}
+@keyframes slideIn{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+button{
+  padding:12px 25px;margin:15px;border:none;border-radius:12px;
+  cursor:pointer;font-size:16px;background:linear-gradient(135deg,#00cec9,#0984e3);
+  color:white;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+button:hover{transform:scale(1.07); background:linear-gradient(135deg,#6c5ce7,#00cec9);}
+input[type=number],input[type=text],input[type=password]{padding:12px;width:60%;margin:10px 0;border-radius:10px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.2);color:#fff;font-size:16px;}
+.progress-container{position:absolute;top:15px;left:50%;transform:translateX(-50%);width:80%;height:12px;background:rgba(255,255,255,0.3);border-radius:20px;overflow:hidden;}
+.progress-bar{height:100%;width:0;background:linear-gradient(90deg,#00cec9,#0984e3);transition:width 0.5s;}
+.circle{width:160px;height:160px;border-radius:50%;border:10px solid rgba(255,255,255,0.2);border-top-color:#00cec9;display:flex;justify-content:center;align-items:center;margin:20px auto;font-size:22px;font-weight:bold;color:#fff;box-shadow:0 0 25px #00cec9,0 0 50px #0984e3;background:rgba(0,0,0,0.2);}
+ul.precautions{text-align:left;display:inline-block;font-size:18px;line-height:1.8;}
+ul.precautions li::before{content:"✔️ "; font-weight:bold;}
+table{width:90%;margin:20px auto;border-collapse:collapse;color:#fff;}
+table,th,td{border:1px solid rgba(255,255,255,0.3);}
+th,td{padding:10px;text-align:center;}
+th{background:rgba(255,255,255,0.2);}
+</style>
+</head>
+<body>
+<div id="particles"></div>
+<div class="container">
+<div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+
+<!-- Slide 0: Sign-Up -->
+<div class="slide active">
+<h2>📝 Sign Up</h2>
+<input type="text" id="signupUser" placeholder="Create Username"><br>
+<input type="password" id="signupPass" placeholder="Create Password"><br>
+<button onclick="signup()">Sign Up ➡️</button>
+<p id="signupError" style="color:#ff7675;font-weight:bold;"></p>
+</div>
+
+<!-- Slide 1: Login -->
+<div class="slide">
+<h2>🔐 Login</h2>
+<input type="text" id="loginUser" placeholder="Username"><br>
+<input type="password" id="loginPass" placeholder="Password"><br>
+<button onclick="login()">Login ➡️</button>
+<p id="loginError" style="color:#ff7675;font-weight:bold;"></p>
+</div>
+
+<!-- Slide 2: Name input -->
+<div class="slide">
+<h2>👤 Enter Your Name</h2>
+<input type="text" id="userName" placeholder="Your Name"><br>
+<button onclick="saveUserName()">Submit ➡️</button>
+</div>
+
+<!-- Slide 3 -->
+<div class="slide">
+<h1>🌐 Welcome to Digital Footprint</h1>
+<p>Your digital footprint is the trail of data you leave online. Let's explore it interactively!</p>
+<button onclick="nextSlide()">Start ▶️</button>
+</div>
+
+<!-- Slide 4 -->
+<div class="slide">
+<h2>📖 What is a Digital Footprint?</h2>
+<p>It includes everything from your social media activity, search history, online purchases, and even your likes & shares.</p>
+<button onclick="nextSlide()">Next ➡️</button>
+</div>
+
+<!-- Slide 5 -->
+<div class="slide">
+<h2>🔍 Types of Digital Footprints</h2>
+<p><b>Active:</b> Information you intentionally share.<br><b>Passive:</b> Data collected without your direct knowledge.</p>
+<button onclick="nextSlide()">Next ➡️</button>
+</div>
+
+<!-- Slide 6 Quiz -->
+<div class="slide">
+<h2>📝 Quiz 1</h2>
+<p>Which of these is an <b>Active Digital Footprint</b>?</p>
+<div class="quiz-options">
+<button onclick="checkAnswer(this,true)">📸 Posting on Instagram</button>
+<button onclick="checkAnswer(this,false)">🍪 Website tracking cookies</button>
+<button onclick="checkAnswer(this,false)">📍 Background location tracking</button>
+</div>
+<p class="result"></p>
+<button onclick="nextSlide()">Next ➡️</button>
+</div>
+
+<!-- Slide 7 -->
+<div class="slide">
+<h2>💡 Why is it Important?</h2>
+<p>Your digital footprint affects your privacy, online reputation, and even job opportunities.</p>
+<button onclick="nextSlide()">Next ➡️</button>
+</div>
+
+<!-- Slide 8 Quiz -->
+<div class="slide">
+<h2>📝 Quiz 2</h2>
+<p>Which action helps protect your digital footprint?</p>
+<div class="quiz-options">
+<button onclick="checkAnswer(this,false)">🔑 Sharing passwords</button>
+<button onclick="checkAnswer(this,true)">🛡️ Using strong privacy settings</button>
+<button onclick="checkAnswer(this,false)">🔗 Clicking random links</button>
+</div>
+<p class="result"></p>
+<button onclick="nextSlide()">Next ➡️</button>
+</div>
+
+<!-- Slide 9 Tips -->
+<div class="slide">
+<h2>🛠️ Tips to Manage Your Digital Footprint</h2>
+<ul class="precautions">
+<li>Think before you post</li>
+<li>Use strong privacy settings</li>
+<li>Regularly clear cookies & history</li>
+<li>Be cautious with personal info</li>
+</ul>
+<button onclick="nextSlide()">Analyzer ➡️</button>
+</div>
+
+<!-- Slide 10 Analyzer -->
+<div class="slide">
+<h2>📊 Digital Footprint Analyzer</h2>
+<div class="analyzer">
+<label>Hours online daily?</label><br>
+<input type="number" id="hours" placeholder="e.g. 5"><br>
+<label>Social media accounts?</label><br>
+<input type="number" id="accounts" placeholder="e.g. 3"><br>
+<label>Use privacy settings?</label><br>
+<button onclick="setPrivacy(true)">✅ Yes</button>
+<button onclick="setPrivacy(false)">❌ No</button>
+<button onclick="calculateScore()">Analyze 🔎</button>
+</div>
+<div id="circleResult" class="circle" style="display:none;">0%</div>
+<p id="analysisResult"></p>
+<button onclick="nextSlide()">Precautions ➡️</button>
+</div>
+
+<!-- Slide 11 Precautions -->
+<div class="slide">
+<h2>🔒 Precautions for a Safer Digital Footprint</h2>
+<ul class="precautions">
+<li>Use strong passwords & enable 2FA</li>
+<li>Limit personal info sharing</li>
+<li>Review privacy settings regularly</li>
+<li>Think before you post</li>
+<li>Clear browsing data often</li>
+<li>Be careful with public Wi-Fi (use VPN)</li>
+<li>Check app permissions</li>
+<li>Search yourself online to monitor visibility</li>
+</ul>
+<button onclick="nextSlide()">History & Comparison ➡️</button>
+</div>
+
+<!-- Slide 12 History & Comparison -->
+<div class="slide">
+<h2>📈 Analyzer History & Comparison</h2>
+<canvas id="scoreChart" style="max-width:700px;margin:0 auto;"></canvas>
+<table id="historyTable">
+<thead>
+<tr><th>Date & Time</th><th>Score</th><th>Feedback</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+<button onclick="clearHistory()">Clear History 🗑️</button>
+<button onclick="nextSlide()">Thank You ➡️</button>
+</div>
+
+<!-- Slide 13 Thank You -->
+<div class="slide">
+<h1>🎉 Thank You!</h1>
+<p id="thankUser"></p>
+<p>Keep your digital footprint safe and smart!</p>
+</div>
+
+<script>
+let currentSlide=0;
+let privacy=false;
+let chart;
+let userName="";
+
+// Particle animation
+const particleContainer=document.getElementById("particles");
+for(let i=0;i<40;i++){
+  let p=document.createElement("div");
+  p.classList.add("particle");
+  let size=Math.random()*12+5;
+  p.style.width=size+"px"; p.style.height=size+"px";
+  p.style.left=Math.random()*100+"%";
+  p.style.animationDuration=(10+Math.random()*20)+"s";
+  particleContainer.appendChild(p);
+}
+
+const slides=document.querySelectorAll(".slide");
+function updateProgress(){
+  document.getElementById("progress").style.width=((currentSlide+1)/slides.length*100)+"%";
+}
+function nextSlide(){
+  slides[currentSlide].classList.remove("active");
+  currentSlide++;
+  if(currentSlide>=slides.length) currentSlide=slides.length-1;
+  slides[currentSlide].classList.add("active");
+  updateProgress();
+  if(currentSlide===12) displayHistory();
+  if(currentSlide===13) document.getElementById("thankUser").textContent=`Presented by ${userName}`;
+}
+
+// Sign Up
+function signup(){
+  const user=document.getElementById("signupUser").value.trim();
+  const pass=document.getElementById("signupPass").value.trim();
+  const error=document.getElementById("signupError");
+  if(!user || !pass){ error.textContent="❌ Enter both username and password!"; return; }
+  localStorage.setItem("dfUser", user);
+  localStorage.setItem("dfPass", pass);
+  error.style.color="#00cec9";
+  error.textContent="✅ Sign up successful! Please log in.";
+  setTimeout(()=>nextSlide(),1000);
+}
+
+// Login
+function login(){
+  const user=document.getElementById("loginUser").value.trim();
+  const pass=document.getElementById("loginPass").value.trim();
+  const error=document.getElementById("loginError");
+  const savedUser=localStorage.getItem("dfUser");
+  const savedPass=localStorage.getItem("dfPass");
+  if(user===savedUser && pass===savedPass){
+    error.textContent="";
+    nextSlide();
+  } else {
+    error.textContent="❌ Invalid credentials!";
+  }
+}
+
+// Name Input
+function saveUserName(){
+  const name=document.getElementById("userName").value.trim();
+  if(!name){ alert("Please enter your name!"); return; }
+  userName=name;
+  alert("Welcome, "+userName+"!");
+  nextSlide();
+}
+
+// Quiz
+function checkAnswer(btn,correct){
+  let result=btn.parentElement.nextElementSibling;
+  if(correct){result.textContent="✅ Correct!"; result.style.color="#00cec9"; btn.style.background="#00b894";}
+  else{result.textContent="❌ Wrong!"; result.style.color="#ff7675"; btn.style.background="#d63031";}
+}
+
+// Analyzer
+function setPrivacy(val){privacy=val; alert("Privacy set: "+(privacy?"Yes":"No"));}
+function calculateScore(){
+  const hours=parseInt(document.getElementById("hours").value)||0;
+  const accounts=parseInt(document.getElementById("accounts").value)||0;
+  let score=100;
+  if(hours>6) score-=20; else if(hours>3) score-=10;
+  if(accounts>5) score-=20; else if(accounts>3) score-=10;
+  if(!privacy) score-=20;
+  let feedback="";
+  if(score>=80) feedback="🌟 Excellent!";
+  else if(score>=50) feedback="⚠️ Moderate";
+  else feedback="❌ High risk";
+  const circle=document.getElementById("circleResult");
+  circle.style.display="flex"; circle.textContent=score+"%";
+  document.getElementById("analysisResult").textContent=`Score: ${score}/100 → ${feedback}`;
+  let history=JSON.parse(localStorage.getItem('dfHistory'))||[];
+  history.push({time:new Date().toLocaleString(),score,feedback});
+  localStorage.setItem('dfHistory',JSON.stringify(history));
+}
+
+// History
+function displayHistory(){
+  let history=JSON.parse(localStorage.getItem('dfHistory'))||[];
+  const tbody=document.getElementById('historyTable').querySelector('tbody');
+  tbody.innerHTML='';
+  let labels=[],scores=[];
+  history.slice().reverse().forEach(e=>{
+    let row=document.createElement('tr');
+    row.innerHTML=`<td>${e.time}</td><td>${e.score}</td><td>${e.feedback}</td>`;
+    tbody.appendChild(row);
+    labels.push(e.time);
+    scores.push(e.score);
+  });
+  if(chart){chart.destroy();}
+  const ctx=document.getElementById('scoreChart').getContext('2d');
+  chart=new Chart(ctx,{type:'line',data:{labels:labels.reverse(),datasets:[{label:'Score',data:scores.reverse(),borderColor:'#00cec9',backgroundColor:'rgba(0,206,201,0.3)'}]},options:{responsive:true}});
+}
+function clearHistory(){localStorage.removeItem('dfHistory'); displayHistory();}
+
+// Initial progress
+updateProgress();
+</script>
+</div>
+</body>
+</html>
+
+
+
